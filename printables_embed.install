@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Printables Embed module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function printables_embed_install() {
+  \Drupal::messenger()->addMessage(t('Printables Embed module has been installed.'));
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function printables_embed_uninstall() {
+  // Clear any cached data related to this module.
+  \Drupal::cache()->invalidateMultiple(['printables_embed:*']);
+  \Drupal::messenger()->addMessage(t('Printables Embed module has been uninstalled.'));
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function printables_embed_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    $http_client_exists = class_exists('\GuzzleHttp\Client');
+    
+    if (!$http_client_exists) {
+      $requirements['printables_embed_http_client'] = [
+        'title' => t('Printables Embed HTTP Client'),
+        'description' => t('The Printables Embed module requires the HTTP Client to be available.'),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+
+  return $requirements;
+}

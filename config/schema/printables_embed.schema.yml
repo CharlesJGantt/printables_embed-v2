@@ -1,0 +1,15 @@
+field.value.printables_embed_printables_embed:
+  type: mapping
+  label: Default value
+  mapping:
+    value:
+      type: label
+      label: Value
+
+field.formatter.settings.printables_embed_printables_embed:
+  type: mapping
+  label: Printables Embed formatter settings
+  mapping:
+    foo:
+      type: string
+      label: Foo

@@ -1,0 +1,154 @@
+.printables-embed {
+  font-family: Arial, sans-serif;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  width: 640px; /* Fixed width */
+  margin: 15px 0; /* Add vertical margin */
+}
+
+.printables-embed .thumbnail {
+  background-position: center;
+  background-size: cover;
+  flex-shrink: 0;
+  width: 190px;
+  height: 190px;
+}
+
+.printables-embed .content {
+  padding: 15px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 190px - 30px); /* Calculate proper width based on container minus thumbnail and padding */
+  overflow: hidden; /* Prevent content from expanding the container */
+}
+
+.printables-embed .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.printables-embed .model-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 330px; /* Limit width to ensure truncation */
+  flex: 1;
+}
+
+.printables-embed .logo-container {
+  text-decoration: none;
+  margin-left: 10px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.printables-embed .printables-logo-img {
+  height: 18px;
+  width: auto;
+  margin-top: 3px;
+}
+
+.printables-embed .author {
+  color: #555;
+  margin: 0 0 10px 0;
+  display: flex;
+  align-items: center;
+}
+
+.printables-embed .author-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.printables-embed .summary {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #444;
+  line-height: 1.4;
+  max-height: 54px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+
+.printables-embed .stats-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 10px;
+  background-color: transparent;
+  width: 100%;
+}
+
+.printables-embed .stats {
+  display: flex;
+  gap: 15px;
+  color: #555;
+  font-size: 14px;
+}
+
+.printables-embed .stat {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.printables-embed .stat-icon {
+  margin-right: 5px;
+  width: 16px;
+  height: 16px;
+}
+
+.printables-embed .view-button {
+  background-color: rgb(250, 104, 49);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.printables-embed .view-button:hover {
+  background-color: rgb(230, 94, 39);
+}
+
+.printables-embed .stats {
+  display: flex;
+  gap: 20px; /* Increased from 15px */
+  color: #555;
+  font-size: 16px; /* Increased from 14px */
+  margin-left: 5px; /* Add a little left margin */
+}
+
+.printables-embed .stat {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.printables-embed .stat-icon {
+  margin-right: 5px;
+  width: 20px; /* Increased from 16px */
+  height: 20px; /* Increased from 16px */
+}

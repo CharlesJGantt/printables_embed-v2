@@ -1,0 +1,14 @@
+ckeditor5:
+  js:
+    js/ckeditor5/plugins.js: {}
+  dependencies:
+    - core/drupal
+    - core/ckeditor5
+
+printables-embed:
+  version: 1.x
+  css:
+    theme:
+      css/printables-embed.css: {}
+  assets:
+    images/printables-logo.png: {}

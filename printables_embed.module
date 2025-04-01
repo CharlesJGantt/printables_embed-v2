@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ * Contains printables_embed.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function printables_embed_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.printables_embed':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Printables Embed module provides a field type for embedding Printables 3D models.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ *
+ * @return array
+ *   An array of theme hook definitions.
+ */
+function printables_embed_theme()
+{
+    return [
+    'printables_embed' => [
+      'variables' => [
+        'name' => null,
+        'summary' => null,
+        'author' => null,
+        'author_avatar' => null,
+        'image_url' => null,
+        'likes_count' => null,
+        'download_count' => null,
+        'view_count' => null,
+        'model_url' => null,
+        'logo_path' => null,
+        'attributes' => [],
+      ],
+      'template' => 'printables-embed',
+    ],
+    ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for printables_embed.
+ *
+ * @param array &$variables
+ *   An associative array of variables to pass to the theme template.
+ *
+ * @return void
+ *   No return value.
+ */
+function printables_embed_preprocess_printables_embed(array &$variables)
+{
+    // Get the module path to use for the logo image
+    $module_path = \Drupal::service('extension.list.module')->getPath('printables_embed');
+    $variables['logo_path'] = '/' . $module_path . '/images/printables-logo.png';
+}
