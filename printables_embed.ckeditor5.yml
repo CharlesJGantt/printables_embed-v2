@@ -9,8 +9,5 @@ printables_embed_button:
       printablesEmbed:
         label: 'Printables Embed'
     elements:
-      - '<div>'
-      - '<h2>'
-      - '<a>'
-      - '<img>'
-      - '<svg>'
+      - '<div class="printables-embed">'
+      - '<div data-printables-url data-printables-id>'

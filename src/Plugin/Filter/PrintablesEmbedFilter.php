@@ -14,10 +14,11 @@ use Drupal\filter\Plugin\FilterBase;
  *   description = @Translation("Converts Printables embed placeholders to embeds."),
  *   type = \Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
  *   settings = {
- *     "width" = 640,
- *     "height" = 190
  *   }
  * )
+ */
+/**
+ * {@inheritdoc}
  */
 class PrintablesEmbedFilter extends FilterBase {
 
@@ -210,4 +211,10 @@ GRAPHQL;
     
     return $form;
   }
+}
+public function defaultSettings() {
+  return [
+    'width' => 640,
+    'height' => 190,
+  ] + parent::defaultSettings();
 }

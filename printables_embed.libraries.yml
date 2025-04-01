@@ -5,6 +5,11 @@ ckeditor5:
     - core/drupal
     - core/ckeditor5
 
+admin.ckeditor5:
+  css:
+    theme:
+      css/printables-embed-admin.css: {}
+
 printables-embed:
   version: 1.x
   css:
