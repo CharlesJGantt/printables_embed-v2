@@ -1,15 +1,11 @@
-field.value.printables_embed_printables_embed:
+ckeditor5.plugin.printables_embed_plugin:
   type: mapping
-  label: Default value
+  label: 'Printables Embed'
   mapping:
-    value:
-      type: label
-      label: Value
-
-field.formatter.settings.printables_embed_printables_embed:
-  type: mapping
-  label: Printables Embed formatter settings
-  mapping:
-    foo:
-      type: string
-      label: Foo
+    toolbar_items:
+      type: mapping
+      label: 'Toolbar items'
+      mapping:
+        printablesEmbed:
+          type: ckeditor5.toolbar_item
+          label: 'Printables Embed Button'

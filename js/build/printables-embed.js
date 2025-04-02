@@ -1,12 +1,13 @@
+/**
+ * @file
+ * Printables Embed plugin for CKEditor 5.
+ */
 (function (Drupal, CKEditor5) {
-  /**
-   * @typedef {import('@ckeditor/ckeditor5-core').PluginInterface} PluginInterface
-   */
+  'use strict';
 
   // Register plugin with Drupal's CKEditor 5 API
   CKEditor5.printables_embed = {
-    // Plugin definition
-    printables_embed: class PrintablesEmbed {
+    PrintablesEmbed: class {
       // Plugin constructor
       constructor(editor) {
         this.editor = editor;
@@ -14,7 +15,7 @@
 
       // Plugin name
       static get pluginName() {
-        return 'printables_embed';
+        return 'PrintablesEmbed';
       }
 
       // Initialize plugin

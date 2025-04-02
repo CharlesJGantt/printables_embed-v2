@@ -1,6 +1,6 @@
 ckeditor5.plugin:
   js:
-    js/ckeditor5-plugin.js: { preprocess: false }
+    js/build/printables-embed.js: { preprocess: false, minified: false }
   dependencies:
     - core/ckeditor5
     - core/drupal
