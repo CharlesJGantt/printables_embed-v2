@@ -1,13 +1,10 @@
-printables_embed_button:
+printables_embed:
   ckeditor5:
-    plugins: ['printables_embed.PrintablesEmbed']
+    plugins: [printables_embed]
   drupal:
     label: 'Printables Embed'
-    library: 'printables_embed/ckeditor5'
-    admin_library: 'printables_embed/admin.ckeditor5'
+    library: printables_embed/ckeditor5.plugin
+    admin_library: printables_embed/admin.ckeditor5
     toolbar_items:
       printablesEmbed:
         label: 'Printables Embed'
-    elements:
-      - '<div class="printables-embed">'
-      - '<div data-printables-url data-printables-id>'

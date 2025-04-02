@@ -1,9 +1,9 @@
-ckeditor5:
+ckeditor5.plugin:
   js:
-    js/ckeditor5/plugins.js: {}
+    js/ckeditor5-plugin.js: { preprocess: false }
   dependencies:
-    - core/drupal
     - core/ckeditor5
+    - core/drupal
 
 admin.ckeditor5:
   css:

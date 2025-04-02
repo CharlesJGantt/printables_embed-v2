@@ -63,3 +63,42 @@ function printables_embed_preprocess_printables_embed(array &$variables)
     $module_path = \Drupal::service('extension.list.module')->getPath('printables_embed');
     $variables['logo_path'] = '/' . $module_path . '/images/printables-logo.png';
 }
+/**
+ * Implements hook_page_attachments().
+ */
+function printables_embed_page_attachments(array &$attachments) {
+  // Only add on admin routes
+  if (\Drupal::service('router.admin_context')->isAdminRoute()) {
+    $attachments['#attached']['library'][] = 'printables_embed/admin.ckeditor5';
+    
+    // Log debug info
+    \Drupal::logger('printables_embed')->notice('CKEditor plugin libraries attached');
+  }
+}
+/**
+ * Implements hook_editor_js_settings_alter().
+ */
+function printables_embed_editor_js_settings_alter(array &$settings) {
+  foreach ($settings['editor']['formats'] as $format => $setting) {
+    if ($setting['editor'] === 'ckeditor5') {
+      $settings['editor']['formats'][$format]['editorSettings']['printables_embed'] = [
+        'buttonLabel' => t('Insert Printables'),
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_ckeditor5_plugin_info_alter().
+ */
+function printables_embed_ckeditor5_plugin_info_alter(array &$plugin_definitions) {
+  $plugin_definitions['printables_embed'] = [
+    'id' => 'printables_embed',
+    'label' => t('Printables Embed'),
+    'provider' => 'printables_embed',
+    'elements' => [
+      '<div class="printables-embed">',
+      '<div data-printables-url data-printables-id>',
+    ],
+  ];
+}
