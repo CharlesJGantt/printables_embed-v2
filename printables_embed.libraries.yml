@@ -11,7 +11,6 @@ admin.ckeditor5:
       css/printables-embed-admin.css: {}
 
 printables-embed:
-  version: 1.x
   css:
     theme:
       css/printables-embed.css: {}

@@ -15,16 +15,13 @@ function printables_embed_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.printables_embed':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Printables Embed module provides a field type for embedding Printables 3D models.') . '</p>';
+      $output .= '<p>' . t('The Printables Embed module provides a field type and CKEditor 5 plugin for embedding Printables 3D models.') . '</p>';
       return $output;
   }
 }
 
 /**
  * Implements hook_theme().
- *
- * @return array
- *   An array of theme hook definitions.
  */
 function printables_embed_theme() {
   return [
@@ -49,12 +46,6 @@ function printables_embed_theme() {
 
 /**
  * Implements hook_preprocess_HOOK() for printables_embed.
- *
- * @param array &$variables
- *   An associative array of variables to pass to the theme template.
- *
- * @return void
- *   No return value.
  */
 function printables_embed_preprocess_printables_embed(array &$variables) {
   // Get the module path to use for the logo image
@@ -69,18 +60,5 @@ function printables_embed_page_attachments(array &$attachments) {
   // Only add on admin routes
   if (\Drupal::service('router.admin_context')->isAdminRoute()) {
     $attachments['#attached']['library'][] = 'printables_embed/admin.ckeditor5';
-  }
-}
-
-/**
- * Implements hook_editor_js_settings_alter().
- */
-function printables_embed_editor_js_settings_alter(array &$settings) {
-  foreach ($settings['editor']['formats'] as $format => $setting) {
-    if (isset($setting['editor']) && $setting['editor'] === 'ckeditor5') {
-      $settings['editor']['formats'][$format]['editorSettings']['printables_embed'] = [
-        'buttonLabel' => t('Insert Printables'),
-      ];
-    }
   }
 }

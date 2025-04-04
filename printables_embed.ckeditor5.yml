@@ -1,14 +1,15 @@
+# The root key must start with the module name
 printables_embed_plugin:
   ckeditor5:
     plugins:
-      - printables_embed.PrintablesEmbed
+      - printablesEmbed.PrintablesEmbed
   drupal:
     label: 'Printables Embed'
     library: printables_embed/ckeditor5.plugin
     admin_library: printables_embed/admin.ckeditor5
     toolbar_items:
       printablesEmbed:
-        label: 'Printables Embed'
+        label: 'Printables'
     elements:
       - <div class="printables-embed">
       - <div data-printables-url data-printables-id>

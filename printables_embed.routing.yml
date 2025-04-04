@@ -1,0 +1,6 @@
+printables_embed.fetch_model:
+  path: '/printables-embed/fetch/{model_id}'
+  defaults:
+    _controller: '\Drupal\printables_embed\Controller\PrintablesEmbedController::fetchModel'
+  requirements:
+    _permission: 'access content'
