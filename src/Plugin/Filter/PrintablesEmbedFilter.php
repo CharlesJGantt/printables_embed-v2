@@ -4,6 +4,7 @@ namespace Drupal\printables_embed\Plugin\Filter;
 
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\Component\Utility\Html;
 
 /**
  * Provides a filter to display Printables embeds.
@@ -22,36 +23,95 @@ class PrintablesEmbedFilter extends FilterBase {
    */
   public function process($text, $langcode) {
     $result = new FilterProcessResult($text);
-
-    if (preg_match_all('/<div class="printables-embed" data-printables-url="([^"]*)" data-printables-id="([^"]*)">[^<]*<\/div>/i', $text, $matches, PREG_SET_ORDER)) {
-      foreach ($matches as $match) {
-        $url = $match[1];
-        $model_id = $match[2];
-        $model_data = $this->getModelData($model_id);
-
-        if ($model_data) {
-          $embed = $this->generateEmbed($model_data, $url, $model_id);
-          $text = str_replace($match[0], $embed, $text);
+    
+    // If there's no DIV with class printables-embed, return early
+    if (strpos($text, 'printables-embed') === FALSE) {
+      return $result;
+    }
+    
+    $dom = Html::load($text);
+    $xpath = new \DOMXPath($dom);
+    
+    // Find all printables embed divs
+    $embeds = $xpath->query('//div[contains(@class, "printables-embed")]');
+    
+    if ($embeds->length > 0) {
+      $changed = FALSE;
+      
+      foreach ($embeds as $embed) {
+        $url = $embed->getAttribute('data-printables-url');
+        $model_id = $embed->getAttribute('data-printables-id');
+        
+        if (!empty($model_id)) {
+          $model_data = $this->getModelData($model_id);
+          
+          if (!empty($model_data)) {
+            // Create a placeholder for the embed with the model ID
+            $placeholder = "<div data-printables-embed=\"$model_id\"></div>";
+            
+            // Replace the original node with the placeholder
+            $fragment = $dom->createDocumentFragment();
+            $fragment->appendXML($placeholder);
+            $embed->parentNode->replaceChild($fragment, $embed);
+            
+            // Add model data as an asset library setting
+            $key = 'printables_embed.model.' . $model_id;
+            $result->addAttachments([
+              'library' => ['printables_embed/printables-embed'],
+              'drupalSettings' => [
+                'printablesEmbed' => [
+                  'models' => [
+                    $model_id => [
+                      'name' => $model_data['name'],
+                      'summary' => $model_data['summary'] ?? '',
+                      'author' => $model_data['user']['publicUsername'] ?? 'Unknown Author',
+                      'authorAvatar' => isset($model_data['user']['avatarFilePath']) ? 
+                        'https://media.printables.com/' . $model_data['user']['avatarFilePath'] : '',
+                      'imageUrl' => isset($model_data['image']['filePath']) ?
+                        'https://media.printables.com/' . $model_data['image']['filePath'] : '',
+                      'likesCount' => $model_data['likesCount'] ?? 0,
+                      'downloadCount' => $model_data['downloadCount'] ?? 0,
+                      'viewCount' => $model_data['displayCount'] ?? 0,
+                      'modelUrl' => 'https://www.printables.com/model/' . $model_id . '-' . ($model_data['slug'] ?? 'model'),
+                    ],
+                  ],
+                ],
+              ],
+            ]);
+            
+            $changed = TRUE;
+          }
         }
       }
-
-      $result->setProcessedText($text);
+      
+      if ($changed) {
+        $result->setProcessedText(Html::serialize($dom));
+      }
     }
-
+    
     return $result;
   }
 
+  /**
+   * Fetch model data from Printables GraphQL API.
+   *
+   * @param string $model_id
+   *   The Printables model ID.
+   *
+   * @return array|null
+   *   The model data or NULL if not found.
+   */
   protected function getModelData($model_id) {
     $cid = 'printables_embed:' . $model_id;
     $cache = \Drupal::cache()->get($cid);
-
+    
     if ($cache && $cache->data) {
       return $cache->data;
     }
-
+    
     try {
       $client = \Drupal::httpClient();
-
+      
       $query = <<<GRAPHQL
 query PrintProfile(\$id: ID!) {
   print(id: \$id) {
@@ -73,7 +133,7 @@ query PrintProfile(\$id: ID!) {
   }
 }
 GRAPHQL;
-
+      
       $response = $client->post('https://api.printables.com/graphql/', [
         'json' => [
           'operationName' => 'PrintProfile',
@@ -85,9 +145,9 @@ GRAPHQL;
           'Accept' => 'application/json',
         ],
       ]);
-
+      
       $data = json_decode($response->getBody(), TRUE);
-
+      
       if (isset($data['data']['print'])) {
         \Drupal::cache()->set(
           $cid,
@@ -95,7 +155,7 @@ GRAPHQL;
           time() + (6 * 60 * 60),
           ['printables_embed:' . $model_id]
         );
-
+        
         return $data['data']['print'];
       }
     }
@@ -104,39 +164,7 @@ GRAPHQL;
         '@error' => $e->getMessage(),
       ]);
     }
-
+    
     return NULL;
-  }
-
-  protected function generateEmbed($model_data, $url, $model_id) {
-    $width = 640;
-    $height = 190;
-
-    $embed = '<div class="printables-embed" style="width: ' . $width . 'px; height: ' . $height . 'px;">';
-    $embed .= '<div class="thumbnail" style="background-image: url(\'https://media.printables.com/' . $model_data['image']['filePath'] . '\'); width: 190px; height: 190px;"></div>';
-    $embed .= '<div class="content">';
-    $embed .= '<div class="header">';
-    $embed .= '<h2 class="model-name">' . htmlspecialchars($model_data['name']) . '</h2>';
-    $embed .= '<a href="' . htmlspecialchars($url) . '" target="_blank" class="logo-container">';
-    $embed .= '<img src="/modules/printables_embed/images/printables-logo.png" alt="Printables" class="printables-logo-img">';
-    $embed .= '</a></div>';
-
-    $embed .= '<div class="author">';
-    $embed .= '<img class="author-avatar" src="https://media.printables.com/' . $model_data['user']['avatarFilePath'] . '" alt="' . htmlspecialchars($model_data['user']['publicUsername']) . '">';
-    $embed .= 'by ' . htmlspecialchars($model_data['user']['publicUsername']);
-    $embed .= '</div>';
-
-    if (!empty($model_data['summary'])) {
-      $embed .= '<div class="summary">' . htmlspecialchars($model_data['summary']) . '</div>';
-    }
-
-    $embed .= '<div class="footer"><div class="stats">';
-    $embed .= '<div class="stat"><svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="..."/></svg>' . $model_data['likesCount'] . '</div>';
-    $embed .= '<div class="stat"><svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="..."/></svg>' . $model_data['downloadCount'] . '</div>';
-    $embed .= '<div class="stat"><svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="..."/></svg>' . $model_data['displayCount'] . '</div>';
-    $embed .= '</div><a href="' . htmlspecialchars($url) . '" target="_blank" class="view-button">View On Printables.com</a></div>';
-    $embed .= '</div></div>';
-
-    return $embed;
   }
 }

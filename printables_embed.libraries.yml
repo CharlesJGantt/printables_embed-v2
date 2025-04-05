@@ -1,6 +1,9 @@
 ckeditor5.plugin:
   js:
     js/build/printables-embed.js: { preprocess: false, minified: false }
+  css:
+    theme:
+      css/printables-embed-editor.css: {}
   dependencies:
     - core/ckeditor5
     - core/drupal
@@ -14,5 +17,8 @@ printables-embed:
   css:
     theme:
       css/printables-embed.css: {}
-  assets:
-    images/printables-logo.png: {}
+  js:
+    js/printables-embed-view.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

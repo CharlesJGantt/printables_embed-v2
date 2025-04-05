@@ -1,3 +1,33 @@
+field.field_settings.printables_embed:
+  type: mapping
+  label: 'Printables embed field settings'
+  mapping:
+    placeholder:
+      type: label
+      label: 'Placeholder'
+
+field.value.printables_embed:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    url:
+      type: string
+      label: 'URL'
+    model_id:
+      type: string
+      label: 'Model ID'
+
+field.formatter.settings.printables_embed_printables_embed:
+  type: mapping
+  label: 'Printables Embed formatter settings'
+  mapping:
+    width:
+      type: integer
+      label: 'Width'
+    height:
+      type: integer
+      label: 'Height'
+
 ckeditor5.plugin.printables_embed_plugin:
   type: mapping
   label: 'Printables Embed'

@@ -1,4 +1,3 @@
-# The root key must start with the module name
 printables_embed_plugin:
   ckeditor5:
     plugins:
